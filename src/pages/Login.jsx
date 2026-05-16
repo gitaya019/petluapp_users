@@ -138,6 +138,7 @@ export default function Login() {
                         rounded-xl
                         font-bold
                         transition
+                        cursor-pointer
                     "
                 >
                     Entrar

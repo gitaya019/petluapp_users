@@ -1,27 +1,71 @@
+// src/pages/Home.jsx
+
 import { useEffect, useState } from "react";
 
 import MainLayout from "../layouts/MainLayout";
 
 import api from "../services/api";
 
+import DashboardCards from "../components/dashboard/DashboardCards";
+
+import MascotaGrid from "../components/mascotas/MascotaGrid";
+
+import CitaGrid from "../components/citas/CitaGrid";
+
+import RecordatorioGrid from "../components/recordatorios/RecordatorioGrid";
+
+import CompraGrid from "../components/compras/CompraGrid";
+
 export default function Home() {
 
     const [mascotas, setMascotas] =
         useState([]);
 
+    const [citas, setCitas] =
+        useState([]);
+
+    const [recordatorios, setRecordatorios] =
+        useState([]);
+
+    const [compras, setCompras] =
+        useState([]);
+
     useEffect(() => {
 
-        const loadMascotas = async () => {
+        const fetchData = async () => {
 
             try {
 
-                const response =
-                    await api.get(
-                        "/mascotas"
-                    );
+                const [
+                    mascotasResponse,
+                    citasResponse,
+                    recordatoriosResponse,
+                    ventasResponse,
+                ] = await Promise.all([
+
+                    api.get("/mascotas"),
+
+                    api.get("/citas"),
+
+                    api.get("/recordatorios"),
+
+                    api.get("/ventas"),
+                ]);
 
                 setMascotas(
-                    response.data.data
+                    mascotasResponse.data.data
+                );
+
+                setCitas(
+                    citasResponse.data.data
+                );
+
+                setRecordatorios(
+                    recordatoriosResponse.data.data
+                );
+
+                setCompras(
+                    ventasResponse.data.data
                 );
 
             } catch (error) {
@@ -30,7 +74,7 @@ export default function Home() {
             }
         };
 
-        loadMascotas();
+        fetchData();
 
     }, []);
 
@@ -40,18 +84,18 @@ export default function Home() {
 
             <div
                 className="
-                    mb-8
+                    mb-10
                 "
             >
 
                 <h1
                     className="
                         text-4xl
-                        font-bold
+                        font-black
                         text-[#6A4C93]
                     "
                 >
-                    Mis Mascotas
+                    Panel Principal
                 </h1>
 
                 <p
@@ -60,70 +104,36 @@ export default function Home() {
                         mt-2
                     "
                 >
-                    Administra toda la información
-                    de tus mascotas.
+                    Gestiona mascotas, citas,
+                    compras y recordatorios.
                 </p>
 
             </div>
 
-            <div
-                className="
-                    grid
-                    grid-cols-1
-                    md:grid-cols-2
-                    lg:grid-cols-3
-                    gap-6
-                "
-            >
+            <DashboardCards
+                mascotas={mascotas}
+                citas={citas}
+                recordatorios={recordatorios}
+                ventas={compras}
+            />
 
-                {mascotas.map((mascota) => (
+            <MascotaGrid
+                mascotas={mascotas}
+            />
 
-                    <div
-                        key={mascota.id}
-                        className="
-                            bg-white
-                            rounded-3xl
-                            p-6
-                            shadow-md
-                            hover:shadow-xl
-                            transition
-                        "
-                    >
+            <CitaGrid
+                citas={citas}
+            />
 
-                        <h2
-                            className="
-                                text-2xl
-                                font-bold
-                                text-[#6A4C93]
-                            "
-                        >
-                            {mascota.nombre}
-                        </h2>
+            <RecordatorioGrid
+                recordatorios={
+                    recordatorios
+                }
+            />
 
-                        <p
-                            className="
-                                text-[#2DB7A3]
-                                font-medium
-                                mt-2
-                            "
-                        >
-                            {mascota.especie}
-                        </p>
-
-                        <p
-                            className="
-                                text-gray-500
-                                mt-1
-                            "
-                        >
-                            {mascota.raza}
-                        </p>
-
-                    </div>
-
-                ))}
-
-            </div>
+            <CompraGrid
+                compras={compras}
+            />
 
         </MainLayout>
     );

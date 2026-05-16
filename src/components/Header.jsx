@@ -1,19 +1,24 @@
-import { PawPrint } from "lucide-react";
+import logo from "../assets/logo_ruby.svg";
+
+import useAuth from "../hooks/useAuth";
+
+import UserInfo from "./UserInfo";
+
+import LogoutButton from "./LogoutButton";
 
 export default function Header() {
+  const { user, loading } = useAuth();
 
-    return (
-
-        <header
-            className="
+  return (
+    <header
+      className="
                 bg-[#6A4C93]
                 text-white
                 shadow-lg
             "
-        >
-
-            <div
-                className="
+    >
+      <div
+        className="
                     max-w-7xl
                     mx-auto
                     px-6
@@ -22,54 +27,71 @@ export default function Header() {
                     items-center
                     justify-between
                 "
-            >
+      >
+        {/* Logo */}
 
-                <div
-                    className="
+        <div
+          className="
                         flex
                         items-center
                         gap-3
                     "
-                >
+        >
+          <div
+            className="
+        bg-[#ffffff]
+        p-2
+        rounded-xl
+    "
+          >
+            <img
+              src={logo}
+              alt="PetluApp"
+              className="
+            w-12
+            h-12
+            object-contain
+        "
+            />
+          </div>
 
-                    <div
-                        className="
-                            bg-[#2DB7A3]
-                            p-2
-                            rounded-xl
-                        "
-                    >
-
-                        <PawPrint size={24} />
-
-                    </div>
-
-                    <div>
-
-                        <h1
-                            className="
+          <div>
+            <h1
+              className="
                                 text-2xl
                                 font-bold
                             "
-                        >
-                            PetluApp
-                        </h1>
+            >
+              PetluApp
+            </h1>
 
-                        <p
-                            className="
+            <p
+              className="
                                 text-sm
                                 text-[#DCCDF2]
                             "
-                        >
-                            Gestión veterinaria inteligente
-                        </p>
+            >
+              Gestión veterinaria inteligente
+            </p>
+          </div>
+        </div>
 
-                    </div>
+        {/* Usuario */}
 
-                </div>
+        {!loading && (
+          <div
+            className="
+                            flex
+                            items-center
+                            gap-4
+                        "
+          >
+            <UserInfo user={user} />
 
-            </div>
-
-        </header>
-    );
+            <LogoutButton />
+          </div>
+        )}
+      </div>
+    </header>
+  );
 }

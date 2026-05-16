@@ -7,9 +7,19 @@ export default function ProtectedRoute({
     const token =
         localStorage.getItem("token");
 
+    /* SI NO HAY TOKEN */
+
     if (!token) {
-        return <Navigate to="/login" />;
+
+        return (
+            <Navigate
+                to="/login"
+                replace
+            />
+        );
     }
+
+    /* SI HAY TOKEN */
 
     return children;
 }

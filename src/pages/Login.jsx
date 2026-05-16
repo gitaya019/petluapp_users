@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo_ruby.svg";
 import {
     Mail,
     Lock,
-    PawPrint,
     Eye,
     EyeOff,
     ShieldCheck,
@@ -189,10 +189,15 @@ export default function Login() {
                         "
                     >
 
-                        <PawPrint
-                            size={38}
-                            className="text-white"
-                        />
+            <img
+              src={logo}
+              alt="PetluApp"
+              className="
+            w-20
+            h-20
+            object-contain
+        "
+            />
 
                     </div>
 

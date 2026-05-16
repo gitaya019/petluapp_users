@@ -1,22 +1,34 @@
-// src/pages/Home.jsx
-
 import { useEffect, useState } from "react";
 
 import MainLayout from "../layouts/MainLayout";
 
 import api from "../services/api";
 
-import DashboardCards from "../components/dashboard/DashboardCards";
+import DashboardCards
+from "../components/dashboard/DashboardCards";
 
-import MascotaGrid from "../components/mascotas/MascotaGrid";
+import MascotaGrid
+from "../components/mascotas/MascotaGrid";
 
-import CitaGrid from "../components/citas/CitaGrid";
+import CitaGrid
+from "../components/citas/CitaGrid";
 
-import RecordatorioGrid from "../components/recordatorios/RecordatorioGrid";
+import RecordatorioGrid
+from "../components/recordatorios/RecordatorioGrid";
 
-import CompraGrid from "../components/compras/CompraGrid";
+import CompraGrid
+from "../components/compras/CompraGrid";
+
+import FuturisticLoader
+from "../components/ui/FuturisticLoader";
+
+import SectionWrapper
+from "../components/ui/SectionWrapper";
 
 export default function Home() {
+
+    const [loading, setLoading] =
+        useState(true);
 
     const [mascotas, setMascotas] =
         useState([]);
@@ -71,6 +83,10 @@ export default function Home() {
             } catch (error) {
 
                 console.log(error);
+
+            } finally {
+
+                setLoading(false);
             }
         };
 
@@ -78,15 +94,25 @@ export default function Home() {
 
     }, []);
 
+    if (loading) {
+
+        return (
+
+            <MainLayout>
+
+                <FuturisticLoader
+                    title="Cargando panel de consultas ..."
+                />
+
+            </MainLayout>
+        );
+    }
+
     return (
 
         <MainLayout>
 
-            <div
-                className="
-                    mb-10
-                "
-            >
+            <div className="mb-10">
 
                 <h1
                     className="
@@ -117,23 +143,61 @@ export default function Home() {
                 ventas={compras}
             />
 
-            <MascotaGrid
-                mascotas={mascotas}
-            />
+            <SectionWrapper
+                data={mascotas}
+                emptyTitle="No tienes mascotas"
+                emptyMessage="
+                    Aún no has registrado mascotas.
+                "
+            >
 
-            <CitaGrid
-                citas={citas}
-            />
+                <MascotaGrid
+                    mascotas={mascotas}
+                />
 
-            <RecordatorioGrid
-                recordatorios={
-                    recordatorios
-                }
-            />
+            </SectionWrapper>
 
-            <CompraGrid
-                compras={compras}
-            />
+            <SectionWrapper
+                data={citas}
+                emptyTitle="No tienes citas"
+                emptyMessage="
+                    No hay citas programadas.
+                "
+            >
+
+                <CitaGrid
+                    citas={citas}
+                />
+
+            </SectionWrapper>
+
+            <SectionWrapper
+                data={recordatorios}
+                emptyTitle="No tienes recordatorios"
+                emptyMessage="
+                    No hay recordatorios pendientes.
+                "
+            >
+
+                <RecordatorioGrid
+                    recordatorios={recordatorios}
+                />
+
+            </SectionWrapper>
+
+            <SectionWrapper
+                data={compras}
+                emptyTitle="No tienes compras"
+                emptyMessage="
+                    No existen compras registradas.
+                "
+            >
+
+                <CompraGrid
+                    compras={compras}
+                />
+
+            </SectionWrapper>
 
         </MainLayout>
     );

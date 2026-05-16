@@ -1,13 +1,20 @@
+// src/App.jsx
+
 import {
     BrowserRouter,
     Routes,
     Route,
+    Navigate,
 } from "react-router-dom";
 
 import Login from "./pages/Login";
+
 import Home from "./pages/Home";
 
-import ProtectedRoute from "./routes/ProtectedRoute";
+import Welcome from "./pages/Welcome";
+
+import ProtectedRoute
+from "./routes/ProtectedRoute";
 
 export default function App() {
 
@@ -17,17 +24,40 @@ export default function App() {
 
             <Routes>
 
+                {/* BIENVENIDA */}
+
+                <Route
+                    path="/"
+                    element={<Welcome />}
+                />
+
+                {/* LOGIN */}
+
                 <Route
                     path="/login"
                     element={<Login />}
                 />
 
+                {/* HOME PROTEGIDO */}
+
                 <Route
-                    path="/"
+                    path="/home"
                     element={
+
                         <ProtectedRoute>
+
                             <Home />
+
                         </ProtectedRoute>
+                    }
+                />
+
+                {/* REDIRECCION */}
+
+                <Route
+                    path="*"
+                    element={
+                        <Navigate to="/" />
                     }
                 />
 

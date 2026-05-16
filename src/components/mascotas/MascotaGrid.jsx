@@ -2,19 +2,18 @@
 
 import MascotaCard from "./MascotaCard";
 
+import HorizontalScroll
+    from "../ui/HorizontalScroll";
+
 export default function MascotaGrid({
     mascotas,
 }) {
 
     return (
 
-        <div>
+        <section className="mt-14">
 
-            <div
-                className="
-                    mb-6
-                "
-            >
+            <div className="mb-6">
 
                 <h2
                     className="
@@ -38,27 +37,29 @@ export default function MascotaGrid({
 
             </div>
 
-            <div
-                className="
-                    grid
-                    grid-cols-1
-                    md:grid-cols-2
-                    xl:grid-cols-3
-                    gap-6
-                "
-            >
+            <HorizontalScroll>
 
                 {mascotas.map((mascota) => (
 
-                    <MascotaCard
+                    <div
                         key={mascota.id}
-                        mascota={mascota}
-                    />
+                        className="
+                            min-w-[340px]
+                            max-w-[340px]
+                            flex-shrink-0
+                        "
+                    >
+
+                        <MascotaCard
+                            mascota={mascota}
+                        />
+
+                    </div>
 
                 ))}
 
-            </div>
+            </HorizontalScroll>
 
-        </div>
+        </section>
     );
 }

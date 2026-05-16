@@ -1,6 +1,10 @@
 // src/components/recordatorios/RecordatorioGrid.jsx
 
-import RecordatorioCard from "./RecordatorioCard";
+import RecordatorioCard
+    from "./RecordatorioCard";
+
+import HorizontalScroll
+    from "../ui/HorizontalScroll";
 
 export default function RecordatorioGrid({
     recordatorios,
@@ -8,17 +12,9 @@ export default function RecordatorioGrid({
 
     return (
 
-        <section
-            className="
-                mt-14
-            "
-        >
+        <section className="mt-14">
 
-            <div
-                className="
-                    mb-6
-                "
-            >
+            <div className="mb-6">
 
                 <h2
                     className="
@@ -41,29 +37,31 @@ export default function RecordatorioGrid({
 
             </div>
 
-            <div
-                className="
-                    grid
-                    grid-cols-1
-                    md:grid-cols-2
-                    lg:grid-cols-3
-                    gap-6
-                "
-            >
+            <HorizontalScroll>
 
                 {recordatorios.map(
                     (recordatorio) => (
 
-                    <RecordatorioCard
+                    <div
                         key={recordatorio.id}
-                        recordatorio={
-                            recordatorio
-                        }
-                    />
+                        className="
+                            min-w-[360px]
+                            max-w-[360px]
+                            flex-shrink-0
+                        "
+                    >
+
+                        <RecordatorioCard
+                            recordatorio={
+                                recordatorio
+                            }
+                        />
+
+                    </div>
 
                 ))}
 
-            </div>
+            </HorizontalScroll>
 
         </section>
     );

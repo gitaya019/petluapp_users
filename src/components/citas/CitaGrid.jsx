@@ -2,23 +2,18 @@
 
 import CitaCard from "./CitaCard";
 
+import HorizontalScroll
+    from "../ui/HorizontalScroll";
+
 export default function CitaGrid({
     citas,
 }) {
 
     return (
 
-        <section
-            className="
-                mt-14
-            "
-        >
+        <section className="mt-14">
 
-            <div
-                className="
-                    mb-6
-                "
-            >
+            <div className="mb-6">
 
                 <h2
                     className="
@@ -41,26 +36,26 @@ export default function CitaGrid({
 
             </div>
 
-            <div
-                className="
-                    grid
-                    grid-cols-1
-                    md:grid-cols-2
-                    lg:grid-cols-3
-                    gap-6
-                "
-            >
+            <HorizontalScroll>
 
                 {citas.map((cita) => (
 
-                    <CitaCard
+                    <div
                         key={cita.id}
-                        cita={cita}
-                    />
+                        className="
+                            min-w-[360px]
+                            max-w-[360px]
+                            flex-shrink-0
+                        "
+                    >
+
+                        <CitaCard cita={cita} />
+
+                    </div>
 
                 ))}
 
-            </div>
+            </HorizontalScroll>
 
         </section>
     );

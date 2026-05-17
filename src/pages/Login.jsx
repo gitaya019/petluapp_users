@@ -1,188 +1,56 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../services/api";
-import { motion, AnimatePresence } from "framer-motion";
-import logo from "../assets/logo_ruby.svg"; 
+// src/pages/LoginPage.jsx
+import LoginOTP from "../components/LoginOTP";
+import logo from "../assets/logo_ruby.svg";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
-export default function LoginOTP() {
-  const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [step, setStep] = useState(1); // 1=Email, 2=OTP
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [resendTimer, setResendTimer] = useState(0);
-  const navigate = useNavigate();
-
-  // Countdown para reenvío de OTP
-  useEffect(() => {
-    let interval;
-    if (resendTimer > 0) {
-      interval = setInterval(() => {
-        setResendTimer((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [resendTimer]);
-
-  const startResendTimer = () => setResendTimer(60); // 60s de espera
-
-  const sendOtp = async () => {
-    if (!email) return setErrors({ email: "El correo es obligatorio" });
-
-    try {
-      setLoading(true);
-      await api.post("/otp/send", { email });
-      setErrors({});
-      setStep(2);
-      startResendTimer();
-    } catch (err) {
-      setErrors({ general: err.response?.data?.message || "Error al enviar OTP" });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const verifyOtp = async () => {
-    if (!otp) return setErrors({ otp: "El OTP es obligatorio" });
-
-    try {
-      setLoading(true);
-      const res = await api.post("/otp/verify", { email, otp });
-      localStorage.setItem("token", res.data.token);
-      navigate("/home");
-    } catch (err) {
-      setErrors({ general: err.response?.data?.message || "OTP inválido o expirado" });
-    } finally {
-      setLoading(false);
-    }
-  };
-
+export default function LoginPage() {
   return (
-    
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#6A4C93]/20 via-[#2DB7A3]/10 to-gray-100 p-4 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#6A4C93]/20 via-[#2DB7A3]/10 to-gray-100">
       
+      {/* Header estilo “Welcome” */}
+      <header className="bg-white/80 backdrop-blur-xl border-b border-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          
+          {/* Logo + nombre */}
+          <div className="flex items-center gap-3">
+            <motion.div
+              className="bg-[#6A4C93] p-2 rounded-xl flex items-center justify-center"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <img src={logo} alt="PetluApp" className="w-12 h-12 object-contain" />
+            </motion.div>
+            <div>
+              <h1 className="text-2xl font-bold text-[#6A4C93]">PetluApp</h1>
+              <p className="text-sm text-[#2DB7A3]">Plataforma veterinaria inteligente</p>
+            </div>
+          </div>
 
-      {/* Efectos de fondo */}
-      <div className="absolute -top-40 -left-40 w-[400px] h-[400px] bg-[#6A4C93]/30 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-[350px] h-[350px] bg-[#2DB7A3]/25 rounded-full blur-3xl"></div>
-
-      <div className="relative z-10 bg-white/80 backdrop-blur-xl border border-white rounded-[32px] shadow-2xl w-full max-w-md p-8 flex flex-col items-center">
-        
-        {/* Logo */}
-        <motion.img
-          src={logo}
-          alt="PetluApp Logo"
-          className="w-24 h-24 mb-4 object-contain"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        />
-
-        <motion.h1
-          className="text-center text-3xl font-extrabold mb-6 text-[#6A4C93]"
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          PetluApp OTP Login
-        </motion.h1>
-
-        {errors.general && (
-          <motion.p
-            className="bg-red-100 text-red-600 p-3 rounded-lg mb-4 text-center font-medium w-full"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
+          {/* Botón de inicio */}
+          <Link
+            to="/"
+            className="px-4 py-2 bg-[#6A4C93] text-white font-semibold rounded-2xl shadow hover:scale-105 transition transform"
           >
-            {errors.general}
-          </motion.p>
-        )}
+            Inicio
+          </Link>
+        </div>
+      </header>
 
-        {/* Contenido con animación entre pasos */}
-        <AnimatePresence mode="wait">
-          {step === 1 && (
-            <motion.div
-              key="step1"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.5 }}
-              className="w-full"
-            >
-              <div className="mb-4">
-                <input
-                  type="email"
-                  placeholder="Correo electrónico"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-4 border border-[#DCCDF2] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2DB7A3]/30 focus:border-[#2DB7A3] transition"
-                />
-                {errors.email && <p className="text-red-500 mt-1">{errors.email}</p>}
-              </div>
+      {/* Contenido central */}
+      <main className="flex-1 flex items-center justify-center p-4">
+        <LoginOTP />
+      </main>
 
-              <button
-                onClick={sendOtp}
-                disabled={loading || resendTimer > 0}
-                className={`w-full p-4 rounded-2xl font-bold text-white text-lg shadow-lg transition-transform transform ${
-                  loading || resendTimer > 0
-                    ? "bg-gradient-to-r from-[#6A4C93]/50 to-[#2DB7A3]/50 opacity-70 cursor-not-allowed"
-                    : "bg-gradient-to-r from-[#6A4C93] to-[#2DB7A3] hover:scale-105 cursor-pointer"
-                }`}
-              >
-                {loading
-                  ? "Enviando OTP..."
-                  : resendTimer > 0
-                  ? `Reenviar OTP en ${resendTimer}s`
-                  : "Enviar OTP"}
-              </button>
-            </motion.div>
-          )}
-
-          {step === 2 && (
-            <motion.div
-              key="step2"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.5 }}
-              className="w-full"
-            >
-              <div className="mb-4 relative">
-                <input
-                  type="text"
-                  placeholder="Ingrese OTP"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  className="w-full p-4 border border-[#DCCDF2] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2DB7A3]/30 focus:border-[#2DB7A3] transition"
-                />
-                {/* Barra de contador visual */}
-                {resendTimer > 0 && (
-                  <div className="absolute bottom-0 left-0 h-1 bg-[#2DB7A3] rounded-b-2xl transition-all" style={{ width: `${((60 - resendTimer) / 60) * 100}%` }} />
-                )}
-                {errors.otp && <p className="text-red-500 mt-1">{errors.otp}</p>}
-              </div>
-
-              <button
-                onClick={verifyOtp}
-                disabled={loading}
-                className={`w-full p-4 rounded-2xl font-bold text-white text-lg shadow-lg transition-transform transform ${
-                  loading
-                    ? "bg-gradient-to-r from-[#6A4C93]/50 to-[#2DB7A3]/50 opacity-70 cursor-not-allowed"
-                    : "bg-gradient-to-r from-[#6A4C93] to-[#2DB7A3] hover:scale-105 cursor-pointer"
-                }`}
-              >
-                {loading ? "Verificando..." : "Verificar OTP"}
-              </button>
-
-              {resendTimer > 0 && (
-                <p className="text-center mt-3 text-gray-500 font-medium">
-                  Puedes reenviar OTP en <span className="font-bold text-[#6A4C93]">{resendTimer}s</span>
-                </p>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      {/* Footer estilo simple */}
+      <footer className="bg-white/80 backdrop-blur-xl border-t border-white mt-10">
+        <div className="max-w-7xl mx-auto px-6 py-6 text-center">
+          <p className="text-gray-500">
+            © 2026 PetluApp · Plataforma veterinaria
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
